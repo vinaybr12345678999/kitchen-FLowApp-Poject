@@ -1,0 +1,234 @@
+/* =========================================
+KitchenFlow - Waiter Page
+========================================= */
+
+.waiter-page {
+min-height: 100vh;
+background: #f8fafc;
+padding: 40px 0;
+}
+
+/* Main container */
+.waiter-container {
+max-width: 1100px;
+}
+
+/* Page title */
+.waiter-title {
+color: #1e293b;
+font-size: 32px;
+font-weight: 700;
+margin-bottom: 8px;
+}
+
+/* Subtitle */
+.waiter-subtitle {
+color: #64748b;
+font-size: 16px;
+margin-bottom: 0;
+}
+
+/* =========================================
+Table Card
+========================================= */
+
+.table-card {
+min-height: 150px;
+padding: 25px 20px;
+border-radius: 16px;
+background: white;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+
+
+border: 2px solid transparent;
+
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+
+}
+
+/* Hover effect */
+.table-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================
+Available Table
+========================================= */
+
+.table-card.available {
+border-color: #22c55e;
+background: #f0fdf4;
+}
+
+.table-card.available:hover {
+background: #dcfce7;
+}
+
+/* =========================================
+Occupied Table
+========================================= */
+
+.table-card.occupied {
+border-color: #ef4444;
+background: #fef2f2;
+}
+
+.table-card.occupied:hover {
+background: #fee2e2;
+}
+
+/* =========================================
+Selected Table
+========================================= */
+
+.table-card.selected {
+border-color: #2563eb;
+background: #eff6ff;
+
+
+box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.15),
+    0 8px 20px rgba(37, 99, 235, 0.15);
+
+transform: translateY(-5px);
+
+
+}
+
+/* =========================================
+Table Number
+========================================= */
+
+.table-number {
+font-size: 22px;
+font-weight: 700;
+color: #1e293b;
+margin-bottom: 12px;
+}
+
+/* =========================================
+Table Status
+========================================= */
+
+.table-status {
+margin: 0;
+font-size: 14px;
+font-weight: 700;
+letter-spacing: 0.5px;
+}
+
+/* Available status text */
+.table-card.available .table-status {
+color: #16a34a;
+}
+
+/* Occupied status text */
+.table-card.occupied .table-status {
+color: #dc2626;
+}
+
+/* =========================================
+Occupied Message
+========================================= */
+
+.table-occupied-message {
+background: #fee2e2;
+color: #b91c1c;
+
+
+padding: 14px 20px;
+border-radius: 10px;
+
+font-size: 15px;
+font-weight: 600;
+
+border: 1px solid #fecaca;
+
+
+}
+
+/* =========================================
+Selected Table Message
+========================================= */
+
+.table-selected-message {
+background: #dcfce7;
+color: #15803d;
+
+
+padding: 14px 20px;
+border-radius: 10px;
+
+font-size: 16px;
+font-weight: 600;
+
+border: 1px solid #bbf7d0;
+
+
+}
+
+/* =========================================
+Loading / Error
+========================================= */
+
+.waiter-page .waiter-title.text-center {
+padding-top: 40px;
+}
+
+/* =========================================
+Responsive Design
+========================================= */
+
+@media (max-width: 768px) {
+.waiter-page {
+padding: 25px 0;
+}
+
+
+.waiter-title {
+    font-size: 27px;
+}
+
+.waiter-subtitle {
+    font-size: 14px;
+}
+
+.table-card {
+    min-height: 140px;
+    padding: 20px;
+}
+
+.table-number {
+    font-size: 20px;
+}
+
+
+}
+
+@media (max-width: 576px) {
+.waiter-page {
+padding: 20px 10px;
+}
+
+
+.waiter-title {
+    font-size: 24px;
+}
+
+.table-card {
+    min-height: 130px;
+}
+
+
+}

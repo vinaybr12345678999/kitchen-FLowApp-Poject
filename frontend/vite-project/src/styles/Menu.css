@@ -1,0 +1,405 @@
+/* =========================================
+   KITCHENFLOW - MENU PAGE
+   Restaurant POS Theme
+========================================= */
+
+.menu-page {
+    min-height: 100vh;
+    background: #f5f1e8;
+    padding: 45px 20px 60px;
+    color: #2d2926;
+}
+
+/* =========================================
+   Page Heading
+========================================= */
+
+.menu-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: #2d2926;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+}
+
+.menu-page > .container > p {
+    color: #756c63;
+    font-size: 16px;
+}
+
+.menu-page > .container > p strong {
+    color: #c65d21;
+    font-weight: 700;
+}
+
+/* =========================================
+   Menu Card
+========================================= */
+
+.menu-card {
+    background: #ffffff;
+    border: 1px solid #eee5d8;
+    border-radius: 18px;
+    overflow: hidden;
+    padding: 0;
+    box-shadow: 0 8px 25px rgba(65, 45, 30, 0.08);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 32px rgba(65, 45, 30, 0.14);
+}
+
+/* =========================================
+   Food Image
+========================================= */
+
+.menu-item-image {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    display: block;
+    background: #eee5d8;
+}
+
+/* =========================================
+   Card Content
+========================================= */
+
+.menu-card .card-body {
+    padding: 22px;
+}
+
+.menu-card h4 {
+    font-size: 21px;
+    font-weight: 800;
+    color: #2d2926;
+    margin-bottom: 12px;
+}
+
+.menu-card p {
+    color: #756c63;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.menu-card p:nth-of-type(2) {
+    color: #c65d21;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+/* =========================================
+   Availability
+========================================= */
+
+.available-text,
+.unavailable-text {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    margin-top: 4px;
+}
+
+.available-text {
+    color: #26734d !important;
+    background: #e4f4eb;
+}
+
+.unavailable-text {
+    color: #b43d3d !important;
+    background: #fde8e8;
+}
+
+/* =========================================
+   Quantity Section
+========================================= */
+
+.quantity-button {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #c65d21;
+    color: #ffffff;
+    font-size: 21px;
+    font-weight: 800;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.quantity-button:hover {
+    background: #a94d19;
+    transform: scale(1.08);
+}
+
+.quantity-button:active {
+    transform: scale(0.94);
+}
+
+.quantity {
+    min-width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5f1e8;
+    border-radius: 10px;
+
+    font-size: 18px;
+    font-weight: 800;
+    color: #2d2926;
+}
+
+/* =========================================
+   Special Instructions
+========================================= */
+
+.form-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #504942;
+    margin-bottom: 7px;
+}
+
+.instruction-input {
+    width: 100%;
+    border: 1px solid #ded4c7;
+    border-radius: 10px;
+    padding: 11px 13px;
+
+    background: #faf8f4;
+    color: #2d2926;
+
+    font-size: 14px;
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.instruction-input::placeholder {
+    color: #aaa098;
+}
+
+.instruction-input:focus {
+    border-color: #c65d21;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(198, 93, 33, 0.12);
+}
+
+/* =========================================
+   Order Summary
+========================================= */
+
+.order-summary {
+    background: #2d2926;
+    color: #ffffff;
+
+    border-radius: 20px;
+    padding: 28px;
+
+    box-shadow: 0 12px 30px rgba(45, 41, 38, 0.18);
+}
+
+.order-summary h3 {
+    font-size: 25px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 20px;
+
+    display: flex;
+    align-items: center;
+}
+
+.order-summary h3::before {
+    content: "🛒";
+    margin-right: 10px;
+    font-size: 22px;
+}
+
+/* =========================================
+   Individual Order Item
+========================================= */
+
+.order-item {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.order-item p {
+    margin: 5px 0;
+    color: #eee7df;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.order-item p:first-child {
+    font-weight: 700;
+}
+
+.order-item p:last-child {
+    color: #bdb4aa;
+    font-size: 13px;
+}
+
+/* =========================================
+   Total
+========================================= */
+
+.order-total {
+    color: #ff9b55;
+    font-size: 24px;
+    font-weight: 800;
+
+    padding-top: 8px;
+}
+
+/* =========================================
+   Place Order Button
+========================================= */
+
+.place-order-button {
+    width: 100%;
+    padding: 14px 20px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: #c65d21;
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.place-order-button:hover {
+    background: #e06d29;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(198, 93, 33, 0.3);
+}
+
+.place-order-button:active {
+    transform: translateY(0);
+}
+
+/* =========================================
+   Loading / Error
+========================================= */
+
+.menu-page > p {
+    color: #756c63;
+    text-align: center;
+    font-size: 18px;
+    padding: 40px;
+}
+
+.menu-error {
+    color: #b43d3d !important;
+}
+
+/* =========================================
+   Responsive - Tablet
+========================================= */
+
+@media (max-width: 992px) {
+    .menu-page {
+        padding: 35px 18px 50px;
+    }
+
+    .menu-title {
+        font-size: 32px;
+    }
+
+    .menu-item-image {
+        height: 190px;
+    }
+}
+
+/* =========================================
+   Responsive - Mobile
+========================================= */
+
+@media (max-width: 768px) {
+    .menu-page {
+        padding: 28px 14px 45px;
+    }
+
+    .menu-title {
+        font-size: 28px;
+    }
+
+    .menu-card {
+        border-radius: 15px;
+    }
+
+    .menu-item-image {
+        height: 200px;
+    }
+
+    .menu-card .card-body {
+        padding: 18px;
+    }
+
+    .order-summary {
+        padding: 22px;
+        border-radius: 16px;
+    }
+
+    .order-summary h3 {
+        font-size: 22px;
+    }
+}
+
+/* =========================================
+   Small Mobile
+========================================= */
+
+@media (max-width: 480px) {
+    .menu-title {
+        font-size: 25px;
+    }
+
+    .menu-item-image {
+        height: 180px;
+    }
+
+    .quantity-button {
+        width: 38px;
+        height: 38px;
+    }
+
+    .quantity {
+        min-width: 34px;
+    }
+
+    .order-total {
+        font-size: 21px;
+    }
+
+    .place-order-button {
+        padding: 13px;
+    }
+}

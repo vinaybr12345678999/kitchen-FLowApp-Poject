@@ -2,16 +2,28 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../store/store";
+import { loginSuccess } from "../store/authSlice";
+
+import "../styles/colors.css";
+import "../styles/Login.css";
+
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
     const [success, setSuccess] = useState("");
 
+    const navigate = useNavigate();
 
-    const handleSubmit = async (e: any) => {
+    // Redux dispatch
+    const dispatch = useDispatch<AppDispatch>();
+
+    const handleSubmit = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
         e.preventDefault();
 
         // Validation
@@ -47,14 +59,35 @@ const Login = () => {
             console.log("Login successful:", data);
             console.log("JWT Token:", data.token);
 
+            // ========================================
+            // Save login information to Redux
+            // ========================================
+
+            dispatch(
+                loginSuccess({
+                    token: data.token,
+                    user: data.user,
+                })
+            );
+
+            // ========================================
+            // Save login information to localStorage
+            // ========================================
+
             localStorage.setItem("token", data.token);
-            // Store user information
-             localStorage.setItem("user", JSON.stringify(data.user));
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(data.user)
+            );
 
             setSuccess("Login successful!");
             setError("");
 
-                  // Navigate based on role
+            // ========================================
+            // Navigate based on role
+            // ========================================
+
             setTimeout(() => {
                 if (data.user.role === "WAITER") {
                     navigate("/waiter");
@@ -70,10 +103,13 @@ const Login = () => {
 
             if (error.response) {
                 setError(
-                    error.response.data.message || "Login failed"
+                    error.response.data.message ||
+                    "Login failed"
                 );
             } else {
-                setError("Unable to connect to the server");
+                setError(
+                    "Unable to connect to the server"
+                );
             }
 
         } finally {
@@ -82,55 +118,59 @@ const Login = () => {
     };
 
     return (
-        
-        <div className="container min-vh-100 d-flex align-items-center">
+        <div className="login-page container-fluid min-vh-100 d-flex align-items-center">
 
-     
-     <div className="row justify-content-center w-100">
-      
-      <div className="col-md-5">
+            <div className="row justify-content-center w-100">
 
-       <h2 className="text-center mb-4">        
-           KitchenFlow Login
-       </h2>
+                <div className="col-md-5">
 
-     <form onSubmit={handleSubmit}>
+                    <h2 className="text-center mb-4">
+                        KitchenFlow Login
+                    </h2>
 
-        
-        {error && (
-         <div className="alert alert-danger">
-              {error}
-               </div>
-                 )}
+                    <form onSubmit={handleSubmit}>
 
-                <div className="mb-3">
-                    <label
-                    htmlFor="email"
-                className="form-label text-start d-block"
+                        {error && (
+                            <div className="alert alert-danger">
+                                {error}
+                            </div>
+                        )}
+
+                        {success && (
+                            <div className="alert alert-success">
+                                {success}
+                            </div>
+                        )}
+
+                        <div className="mb-3">
+
+                            <label
+                                htmlFor="email"
+                                className="form-label text-start d-block"
                             >
-                      Email
-                 </label>
+                                Email
+                            </label>
 
-                     <input
-                     type="email"
-                     id="email"
-                     name="email"
-                     className="form-control"
-                     placeholder="Enter your email"
-                     value={email}
-                     onChange={(e) => {
-                     setEmail(e.target.value);
-
-                     // clear the error when the user starts correcting the field.
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                className="form-control"
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
                                     setError("");
                                 }}
-                    />
-                       </div>
+                            />
 
-                   <div className="mb-3">
-                       <label
-                       htmlFor="password"
-                      className="form-label text-start d-block"
+                        </div>
+
+                        <div className="mb-3">
+
+                            <label
+                                htmlFor="password"
+                                className="form-label text-start d-block"
                             >
                                 Password
                             </label>
@@ -144,24 +184,28 @@ const Login = () => {
                                 value={password}
                                 onChange={(e) => {
                                     setPassword(e.target.value);
-
                                     setError("");
                                 }}
                             />
+
                         </div>
 
                         <button
                             type="submit"
-                            className="btn btn-primary w-100"
+                            className="login-button w-100"
                             disabled={loading}
                         >
-                            {loading ? "Logging in..." : "Login"}
+                            {loading
+                                ? "Logging in..."
+                                : "Login"}
                         </button>
 
                     </form>
 
                 </div>
+
             </div>
+
         </div>
     );
 };

@@ -1,60 +1,63 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const authenticate = (
-    req: Request,
+
+export interface AuthRequest extends Request {
+   
+    user?: {
+        id: string;
+        role: "WAITER" | "KITCHEN" | "MANAGER";
+    };
+}
+
+
+export const authMiddleware = (
+    
+    req: AuthRequest,
     res: Response,
     next: NextFunction
 ) => {
+    
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+
+        
+        return res.status(401).json({
+            message: "Access denied. No token provided."
+        });
+    }
+    
+    const [bearer, token] = authHeader.split(" ");
+
+   
+    if (bearer !== "Bearer" || !token) {
+
+        return res.status(401).json({
+            message: "Invalid authorization format."
+        });
+    }
+
+
     try {
-        const authHeader = req.headers.authorization;
 
-        if (!authHeader) {
-            return res.status(401).json({
-                message: "Authentication required"
-            });
-        }
+       
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
-        const token = authHeader.split(" ")[1];
+     
+        req.user = decoded as AuthRequest["user"];
 
-        const decoded = jwt.verify(
-            token,
-            process.env.JWT_SECRET!
-        );
-
-        (req as any).user = decoded;
-
+       
         next();
 
     } catch (error) {
+
+      
         return res.status(401).json({
-            message: "Invalid or expired token"
+            message: "Invalid or expired token."
         });
     }
 };
 
-export default authenticate;
-export const authorizeRoles = (...roles: string[]) => {
-    return (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
 
-        const user = (req as any).user;
-
-        if (!user) {
-            return res.status(401).json({
-                message: "Authentication required"
-            });
-        }
-
-        if (!roles.includes(user.role)) {
-            return res.status(403).json({
-                message: "Access denied"
-            });
-        }
-
-        next();
-    };
-};
+export default authMiddleware;

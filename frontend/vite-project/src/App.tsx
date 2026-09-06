@@ -1,29 +1,19 @@
-// import { Routes, Route } from "react-router-dom";
-// import Login from "./pages/Login";
-// import Register from "./pages/Register";
-
-// function App() {
-//     return (
-//         <Routes>
-//             <Route path="/login" element={<Login />} />
-//             <Route path="/register" element={<Register />} />
-//         </Routes>
-//     );
-// }
-
-// export default App;
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Waiter from "./pages/waiter";
-import Kitchen from "./pages/kitchen";
-import Manager from "./pages/manager";
+import Waiter from "./pages/Waiter";
+import Kitchen from "./pages/Kitchen";
+import Manager from "./pages/Manager";
+import Menu from "./pages/Menu";
+
+import ProtectedRoute from "./protectedRoute";
+
 function App() {
     return (
         <Routes>
 
-          
+            {/* Public routes */}
 
             <Route
                 path="/login"
@@ -34,18 +24,50 @@ function App() {
                 path="/register"
                 element={<Register />}
             />
+
+            {/* WAITER */}
+
             <Route
                 path="/waiter"
-                element={<Waiter />} />
-            
+                element={
+                    <ProtectedRoute allowedRole="WAITER">
+                        <Waiter />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* KITCHEN */}
+
             <Route
                 path="/kitchen"
-                element={<Kitchen />} />
-            
+                element={
+                    <ProtectedRoute allowedRole="KITCHEN">
+                        <Kitchen />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* MANAGER */}
+
             <Route
                 path="/manager"
-                element={<Manager />} />
-            
+                element={
+                    <ProtectedRoute allowedRole="MANAGER">
+                        <Manager />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* MENU - waiter only */}
+
+            <Route
+                path="/menu"
+                element={
+                    <ProtectedRoute allowedRole="WAITER">
+                        <Menu />
+                    </ProtectedRoute>
+                }
+            />
 
         </Routes>
     );
