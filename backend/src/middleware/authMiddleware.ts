@@ -1,63 +1,105 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+// ========================================
+// AUTH TYPES
+// ========================================
 
 export interface AuthRequest extends Request {
-   
     user?: {
         id: string;
-        role: "WAITER" | "KITCHEN" | "MANAGER";
+        role: "MANAGER" | "WAITER" | "KITCHEN";
     };
 }
 
+// ========================================
+// JWT PAYLOAD TYPE
+// ========================================
 
-export const authMiddleware = (
-    
+interface JwtPayload {
+    userId: string;
+    role: "MANAGER" | "WAITER" | "KITCHEN";
+}
+
+// ========================================
+// AUTHENTICATE
+// ========================================
+
+const authenticate = (
     req: AuthRequest,
     res: Response,
     next: NextFunction
-) => {
-    
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader) {
-
-        
-        return res.status(401).json({
-            message: "Access denied. No token provided."
-        });
-    }
-    
-    const [bearer, token] = authHeader.split(" ");
-
-   
-    if (bearer !== "Bearer" || !token) {
-
-        return res.status(401).json({
-            message: "Invalid authorization format."
-        });
-    }
-
-
+): void => {
     try {
+        // Get Authorization header
+        const authHeader = req.headers.authorization;
 
-       
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+        if (!authHeader) {
+            res.status(401).json({
+                message: "Authorization token required",
+            });
+            return;
+        }
 
-     
-        req.user = decoded as AuthRequest["user"];
+        // Expected:
+        // Authorization: Bearer TOKEN
 
-       
+        const parts = authHeader.split(" ");
+
+        if (
+            parts.length !== 2 ||
+            parts[0] !== "Bearer"
+        ) {
+            res.status(401).json({
+                message: "Invalid authorization format",
+            });
+            return;
+        }
+
+        const token = parts[1];
+
+        // JWT secret
+        const secret = process.env.JWT_SECRET;
+
+        if (!secret) {
+            res.status(500).json({
+                message: "JWT_SECRET is missing in .env",
+            });
+            return;
+        }
+
+        // Verify token
+        const decoded = jwt.verify(
+            token,
+            secret
+        ) as JwtPayload;
+
+        // Check decoded data
+        if (!decoded.userId || !decoded.role) {
+            res.status(401).json({
+                message: "Invalid token",
+            });
+            return;
+        }
+
+        // Attach user to request
+        req.user = {
+            id: decoded.userId,
+            role: decoded.role,
+        };
+
         next();
 
     } catch (error) {
+        console.error(
+            "Authentication error:",
+            error
+        );
 
-      
-        return res.status(401).json({
-            message: "Invalid or expired token."
+        res.status(401).json({
+            message: "Invalid or expired token",
         });
     }
 };
 
-
-export default authMiddleware;
+export default authenticate;

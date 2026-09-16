@@ -1,405 +1,588 @@
-/* =========================================
-   KITCHENFLOW - MENU PAGE
-   Restaurant POS Theme
-========================================= */
+/* =========================================================
+   KITCHENFLOW MENU - FINAL CLEAN UI
+   4 ITEMS IN ONE ROW ON DESKTOP
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
 
 .menu-page {
     min-height: 100vh;
-    background: #f5f1e8;
-    padding: 45px 20px 60px;
-    color: #2d2926;
+    width: 100%;
+    padding: 28px 18px 60px;
+    background: #f6f6f3;
+    color: #222;
 }
 
-/* =========================================
-   Page Heading
-========================================= */
+.menu-page .container {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+}
 
-.menu-title {
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.restaurant-header {
+    text-align: center;
+    padding: 12px 10px 32px;
+}
+
+.restaurant-icon {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #222;
+    color: #fff;
+    font-size: 27px;
+}
+
+.restaurant-name {
+    margin: 0;
     font-size: 36px;
+    line-height: 1.15;
     font-weight: 800;
-    color: #2d2926;
-    letter-spacing: -0.5px;
-    margin-bottom: 8px;
 }
 
-.menu-page > .container > p {
-    color: #756c63;
-    font-size: 16px;
+.restaurant-subtitle {
+    margin: 7px 0 15px;
+    color: #777;
+    font-size: 15px;
 }
 
-.menu-page > .container > p strong {
-    color: #c65d21;
+.table-badge {
+    display: inline-flex;
+    padding: 7px 18px;
+    border-radius: 999px;
+    background: #222;
+    color: #fff;
+    font-size: 13px;
     font-weight: 700;
 }
 
-/* =========================================
-   Menu Card
-========================================= */
+/* =========================================================
+   CATEGORY
+   ========================================================= */
 
-.menu-card {
-    background: #ffffff;
-    border: 1px solid #eee5d8;
-    border-radius: 18px;
+.restaurant-menu {
+    width: 100%;
+}
+
+.menu-category {
+    width: 100%;
+    margin-bottom: 42px;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.category-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.category-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    font-size: 21px;
+}
+
+.category-title {
+    margin: 0;
+    font-size: 23px;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.category-count {
+    display: block;
+    margin-top: 2px;
+    color: #888;
+    font-size: 12px;
+}
+
+.category-line {
+    flex: 1;
+    height: 1px;
+    background: #dedede;
+}
+
+/* =========================================================
+   IMPORTANT:
+   4 CARDS PER ROW
+   ========================================================= */
+
+.menu-items-list {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+    align-items: stretch;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.restaurant-menu-item {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    padding: 0;
-    box-shadow: 0 8px 25px rgba(65, 45, 30, 0.08);
+
+    background: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 14px;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+
     transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
 }
 
-.menu-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 32px rgba(65, 45, 30, 0.14);
+.restaurant-menu-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
 }
 
-/* =========================================
-   Food Image
-========================================= */
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.menu-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 175px;
+    overflow: hidden;
+    background: #eeeeeb;
+}
 
 .menu-item-image {
-    width: 100%;
-    height: 210px;
-    object-fit: cover;
     display: block;
-    background: #eee5d8;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
 }
 
-/* =========================================
-   Card Content
-========================================= */
-
-.menu-card .card-body {
-    padding: 22px;
+.menu-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eeeeeb;
+    font-size: 44px;
 }
 
-.menu-card h4 {
-    font-size: 21px;
+.unavailable-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   DETAILS
+   ========================================================= */
+
+.menu-item-details {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 13px;
+}
+
+.menu-item-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.menu-item-name {
+    min-width: 0;
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.25;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.menu-item-price {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 16px;
     font-weight: 800;
-    color: #2d2926;
-    margin-bottom: 12px;
 }
 
-.menu-card p {
-    color: #756c63;
-    font-size: 14px;
-    margin-bottom: 8px;
+.menu-item-category {
+    margin: 6px 0 4px;
+    color: #777;
+    font-size: 12px;
+    text-transform: capitalize;
 }
-
-.menu-card p:nth-of-type(2) {
-    color: #c65d21;
-    font-size: 17px;
-    font-weight: 800;
-}
-
-/* =========================================
-   Availability
-========================================= */
 
 .available-text,
 .unavailable-text {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    margin-top: 4px;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 650;
 }
 
 .available-text {
-    color: #26734d !important;
-    background: #e4f4eb;
+    color: #16834b;
 }
 
 .unavailable-text {
-    color: #b43d3d !important;
-    background: #fde8e8;
+    color: #c0392b;
 }
 
-/* =========================================
-   Quantity Section
-========================================= */
+.item-unavailable {
+    opacity: 0.82;
+}
 
-.quantity-button {
-    width: 42px;
-    height: 42px;
-    border: none;
-    border-radius: 50%;
-    background: #c65d21;
-    color: #ffffff;
-    font-size: 21px;
-    font-weight: 800;
-    cursor: pointer;
+/* =========================================================
+   ACTIONS
+   ========================================================= */
 
+.menu-item-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.quantity-control {
+    width: 100%;
+    height: 38px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    overflow: hidden;
 
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
 }
 
-.quantity-button:hover {
-    background: #a94d19;
-    transform: scale(1.08);
+.quantity-button {
+    width: 36px;
+    height: 38px;
+    border: 0;
+    background: #222;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
 }
 
-.quantity-button:active {
-    transform: scale(0.94);
+.quantity-button:disabled {
+    background: #ddd;
+    color: #888;
+    cursor: not-allowed;
 }
 
 .quantity {
-    min-width: 38px;
-    height: 38px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #f5f1e8;
-    border-radius: 10px;
-
-    font-size: 18px;
-    font-weight: 800;
-    color: #2d2926;
-}
-
-/* =========================================
-   Special Instructions
-========================================= */
-
-.form-label {
-    font-size: 13px;
+    min-width: 30px;
+    text-align: center;
+    font-size: 14px;
     font-weight: 700;
-    color: #504942;
-    margin-bottom: 7px;
 }
 
 .instruction-input {
     width: 100%;
-    border: 1px solid #ded4c7;
-    border-radius: 10px;
-    padding: 11px 13px;
+    height: 38px;
+    padding: 0 10px;
 
-    background: #faf8f4;
-    color: #2d2926;
-
-    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     outline: none;
 
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.instruction-input::placeholder {
-    color: #aaa098;
+    font-size: 12px;
+    color: #222;
+    background: #fff;
 }
 
 .instruction-input:focus {
-    border-color: #c65d21;
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(198, 93, 33, 0.12);
+    border-color: #999;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.04);
 }
 
-/* =========================================
-   Order Summary
-========================================= */
+/* =========================================================
+   ORDER SUMMARY
+   ========================================================= */
 
 .order-summary {
-    background: #2d2926;
-    color: #ffffff;
+    position: relative !important;
+    width: 100%;
+    margin: 35px 0 0 !important;
+    padding: 22px;
 
-    border-radius: 20px;
-    padding: 28px;
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 16px;
 
-    box-shadow: 0 12px 30px rgba(45, 41, 38, 0.18);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06);
 }
 
-.order-summary h3 {
-    font-size: 25px;
-    font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 20px;
-
+.summary-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ededed;
 }
 
-.order-summary h3::before {
-    content: "🛒";
-    margin-right: 10px;
+.summary-header h3 {
+    margin: 0;
     font-size: 22px;
+    font-weight: 800;
 }
 
-/* =========================================
-   Individual Order Item
-========================================= */
-
-.order-item {
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.order-item p {
-    margin: 5px 0;
-    color: #eee7df;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.order-item p:first-child {
-    font-weight: 700;
-}
-
-.order-item p:last-child {
-    color: #bdb4aa;
+.summary-header span {
+    display: block;
+    margin-top: 4px;
+    color: #777;
     font-size: 13px;
 }
 
-/* =========================================
-   Total
-========================================= */
-
-.order-total {
-    color: #ff9b55;
+.summary-total {
     font-size: 24px;
     font-weight: 800;
-
-    padding-top: 8px;
 }
 
-/* =========================================
-   Place Order Button
-========================================= */
+.summary-items {
+    width: 100%;
+}
+
+.order-item {
+    padding: 13px 0;
+    border-bottom: 1px solid #ededed;
+}
+
+.order-item-main {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.order-item-main span {
+    display: block;
+    margin-top: 3px;
+    color: #777;
+    font-size: 13px;
+}
+
+.order-instruction {
+    margin: 7px 0 0;
+    color: #777;
+    font-size: 12px;
+}
+
+.empty-summary {
+    padding: 18px 0;
+    text-align: center;
+    color: #888;
+}
+
+/* =========================================================
+   SUMMARY FOOTER
+   ========================================================= */
+
+.summary-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding-top: 18px;
+}
+
+.summary-footer > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.summary-footer > div span {
+    color: #777;
+    font-size: 12px;
+}
+
+.summary-footer > div strong {
+    font-size: 24px;
+}
 
 .place-order-button {
-    width: 100%;
-    padding: 14px 20px;
+    min-height: 46px;
+    padding: 0 25px;
 
-    border: none;
-    border-radius: 11px;
+    border: 0;
+    border-radius: 9px;
 
-    background: #c65d21;
-    color: #ffffff;
+    background: #222;
+    color: #fff;
 
-    font-size: 16px;
-    font-weight: 800;
+    font-size: 14px;
+    font-weight: 750;
 
     cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
 }
 
-.place-order-button:hover {
-    background: #e06d29;
-    transform: translateY(-2px);
-    box-shadow: 0 7px 18px rgba(198, 93, 33, 0.3);
+.place-order-button:hover:not(:disabled) {
+    opacity: 0.88;
 }
 
-.place-order-button:active {
-    transform: translateY(0);
+.place-order-button:disabled {
+    background: #bdbdbd;
+    cursor: not-allowed;
 }
 
-/* =========================================
-   Loading / Error
-========================================= */
+.order-message {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+}
 
-.menu-page > p {
-    color: #756c63;
+.success-message {
+    background: #eaf8f0;
+    color: #167245;
+}
+
+.error-message {
+    background: #fff0ef;
+    color: #b42318;
+}
+
+/* =========================================================
+   EMPTY / INVALID
+   ========================================================= */
+
+.empty-menu,
+.invalid-table {
+    width: 100%;
+    margin: 20px auto;
+    padding: 50px 20px;
     text-align: center;
-    font-size: 18px;
-    padding: 40px;
+    background: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 16px;
 }
 
-.menu-error {
-    color: #b43d3d !important;
+.empty-menu > div {
+    font-size: 42px;
 }
 
-/* =========================================
-   Responsive - Tablet
-========================================= */
+.empty-menu h3,
+.invalid-table h2 {
+    margin: 10px 0 7px;
+}
 
-@media (max-width: 992px) {
+.empty-menu p,
+.invalid-table p {
+    margin: 0;
+    color: #777;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+    .menu-items-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .menu-image-wrapper {
+        height: 210px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
     .menu-page {
-        padding: 35px 18px 50px;
+        padding: 18px 11px 40px;
     }
 
-    .menu-title {
-        font-size: 32px;
+    .restaurant-name {
+        font-size: 30px;
     }
 
-    .menu-item-image {
-        height: 190px;
-    }
-}
-
-/* =========================================
-   Responsive - Mobile
-========================================= */
-
-@media (max-width: 768px) {
-    .menu-page {
-        padding: 28px 14px 45px;
+    .menu-items-list {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
     }
 
-    .menu-title {
-        font-size: 28px;
-    }
-
-    .menu-card {
-        border-radius: 15px;
-    }
-
-    .menu-item-image {
-        height: 200px;
-    }
-
-    .menu-card .card-body {
-        padding: 18px;
+    .menu-image-wrapper {
+        height: 220px;
     }
 
     .order-summary {
-        padding: 22px;
-        border-radius: 16px;
+        padding: 17px;
     }
 
-    .order-summary h3 {
-        font-size: 22px;
-    }
-}
-
-/* =========================================
-   Small Mobile
-========================================= */
-
-@media (max-width: 480px) {
-    .menu-title {
-        font-size: 25px;
-    }
-
-    .menu-item-image {
-        height: 180px;
-    }
-
-    .quantity-button {
-        width: 38px;
-        height: 38px;
-    }
-
-    .quantity {
-        min-width: 34px;
-    }
-
-    .order-total {
-        font-size: 21px;
+    .summary-footer {
+        flex-direction: column;
+        align-items: stretch;
     }
 
     .place-order-button {
-        padding: 13px;
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+    .restaurant-name {
+        font-size: 27px;
+    }
+
+    .menu-image-wrapper {
+        height: 195px;
+    }
+
+    .menu-item-top {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .summary-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

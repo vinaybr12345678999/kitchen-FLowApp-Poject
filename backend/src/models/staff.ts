@@ -1,41 +1,39 @@
-import mongoose, {
-    Document,
-    Schema,
-} from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 // ========================================
-// USER ROLE
+// STAFF INTERFACE
 // ========================================
 
-export type UserRole =
-    | "MANAGER"
-    | "WAITER"
-    | "KITCHEN";
-
-// ========================================
-// USER INTERFACE
-// ========================================
-
-export interface IUser extends Document {
+export interface IStaff extends Document {
     name: string;
+    image: string;
     email: string;
+    phone: string;
     password: string;
-    role: UserRole;
+
+    // Staff roles ONLY
+    role: "WAITER" | "KITCHEN";
+
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
 
 // ========================================
-// USER SCHEMA
+// STAFF SCHEMA
 // ========================================
 
-const userSchema = new Schema<IUser>(
+const staffSchema = new Schema<IStaff>(
     {
         name: {
             type: String,
             required: true,
             trim: true,
+        },
+
+        image: {
+            type: String,
+            default: "",
         },
 
         email: {
@@ -46,18 +44,21 @@ const userSchema = new Schema<IUser>(
             trim: true,
         },
 
+        phone: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+
         password: {
             type: String,
             required: true,
         },
 
+        // Staff role only
         role: {
             type: String,
-            enum: [
-                "MANAGER",
-                "WAITER",
-                "KITCHEN",
-            ],
+            enum: ["WAITER", "KITCHEN"],
             required: true,
         },
 
@@ -71,9 +72,13 @@ const userSchema = new Schema<IUser>(
     }
 );
 
-const User = mongoose.model<IUser>(
-    "User",
-    userSchema
+// ========================================
+// MODEL
+// ========================================
+
+const Staff = mongoose.model<IStaff>(
+    "Staff",
+    staffSchema
 );
 
-export default User;
+export default Staff;

@@ -1,5 +1,127 @@
 
-import mongoose, { Document, Schema } from "mongoose";
+// import mongoose, { Document, Schema } from "mongoose";
+
+// export interface IOrderItem {
+//     menuItemId: mongoose.Types.ObjectId;
+//     name: string;
+//     price: number;
+//     quantity: number;
+//     instructions?: string;
+// }
+
+// export interface IOrder extends Document {
+//     tableId: mongoose.Types.ObjectId;
+//     tableNumber: number;
+//     items: IOrderItem[];
+//     totalAmount: number;
+
+//     status:
+//         | "NEW"
+//         | "PREPARING"
+//         | "READY"
+//         | "SERVED"
+//         | "PAID";
+
+//     createdAt: Date;
+//     updatedAt: Date;
+// }
+
+// const orderItemSchema = new Schema<IOrderItem>(
+//     {
+//         menuItemId: {
+//             type: Schema.Types.ObjectId,
+//             ref: "MenuItem",
+//             required: true,
+//         },
+
+//         name: {
+//             type: String,
+//             required: true,
+//         },
+
+//         price: {
+//             type: Number,
+//             required: true,
+//             min: 0,
+//         },
+
+//         quantity: {
+//             type: Number,
+//             required: true,
+//             min: 1,
+//         },
+
+//         instructions: {
+//             type: String,
+//             trim: true,
+//         },
+//     },
+//     {
+//         _id: false,
+//     }
+// );
+
+// const orderSchema = new Schema<IOrder>(
+//     {
+//         tableId: {
+//             type: Schema.Types.ObjectId,
+//             ref: "Table",
+//             required: true,
+//         },
+
+//         tableNumber: {
+//             type: Number,
+//             required: true,
+//         },
+
+//         items: {
+//             type: [orderItemSchema],
+//             required: true,
+//             validate: {
+//                 validator: (items: IOrderItem[]) =>
+//                     items.length > 0,
+//                 message:
+//                     "Order must contain at least one item",
+//             },
+//         },
+
+//         totalAmount: {
+//             type: Number,
+//             required: true,
+//             min: 0,
+//         },
+
+//         status: {
+//             type: String,
+//             enum: [
+//                 "NEW",
+//                 "PREPARING",
+//                 "READY",
+//                 "SERVED",
+//                 "PAID",
+//             ],
+//             default: "NEW",
+//         },
+//     },
+//     {
+//         timestamps: true,
+//     }
+// );
+
+// const Order = mongoose.model<IOrder>(
+//     "Order",
+//     orderSchema
+// );
+
+// export default Order;
+import mongoose, {
+    Document,
+    Schema,
+} from "mongoose";
+
+// ========================================
+// ORDER ITEM
+// ========================================
 
 export interface IOrderItem {
     menuItemId: mongoose.Types.ObjectId;
@@ -9,10 +131,21 @@ export interface IOrderItem {
     instructions?: string;
 }
 
+// ========================================
+// ORDER
+// ========================================
+
 export interface IOrder extends Document {
     tableId: mongoose.Types.ObjectId;
     tableNumber: number;
+
+    // ALL items belonging to this table session
     items: IOrderItem[];
+
+    // Newly added items which kitchen still needs
+    // to prepare.
+    pendingItems: IOrderItem[];
+
     totalAmount: number;
 
     status:
@@ -26,40 +159,49 @@ export interface IOrder extends Document {
     updatedAt: Date;
 }
 
-const orderItemSchema = new Schema<IOrderItem>(
-    {
-        menuItemId: {
-            type: Schema.Types.ObjectId,
-            ref: "MenuItem",
-            required: true,
-        },
+// ========================================
+// ITEM SCHEMA
+// ========================================
 
-        name: {
-            type: String,
-            required: true,
-        },
+const orderItemSchema =
+    new Schema<IOrderItem>(
+        {
+            menuItemId: {
+                type: Schema.Types.ObjectId,
+                ref: "MenuItem",
+                required: true,
+            },
 
-        price: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
+            name: {
+                type: String,
+                required: true,
+            },
 
-        quantity: {
-            type: Number,
-            required: true,
-            min: 1,
-        },
+            price: {
+                type: Number,
+                required: true,
+                min: 0,
+            },
 
-        instructions: {
-            type: String,
-            trim: true,
+            quantity: {
+                type: Number,
+                required: true,
+                min: 1,
+            },
+
+            instructions: {
+                type: String,
+                trim: true,
+            },
         },
-    },
-    {
-        _id: false,
-    }
-);
+        {
+            _id: false,
+        }
+    );
+
+// ========================================
+// ORDER SCHEMA
+// ========================================
 
 const orderSchema = new Schema<IOrder>(
     {
@@ -74,15 +216,25 @@ const orderSchema = new Schema<IOrder>(
             required: true,
         },
 
+        // Complete bill items
         items: {
             type: [orderItemSchema],
             required: true,
+
             validate: {
-                validator: (items: IOrderItem[]) =>
-                    items.length > 0,
+                validator: (
+                    items: IOrderItem[]
+                ) => items.length > 0,
+
                 message:
                     "Order must contain at least one item",
             },
+        },
+
+        // Only newly added items
+        pendingItems: {
+            type: [orderItemSchema],
+            default: [],
         },
 
         totalAmount: {
@@ -93,6 +245,7 @@ const orderSchema = new Schema<IOrder>(
 
         status: {
             type: String,
+
             enum: [
                 "NEW",
                 "PREPARING",
@@ -100,9 +253,11 @@ const orderSchema = new Schema<IOrder>(
                 "SERVED",
                 "PAID",
             ],
+
             default: "NEW",
         },
     },
+
     {
         timestamps: true,
     }
@@ -114,4 +269,3 @@ const Order = mongoose.model<IOrder>(
 );
 
 export default Order;
-

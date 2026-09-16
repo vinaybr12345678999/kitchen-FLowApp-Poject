@@ -15,6 +15,7 @@ export interface IBill extends Document {
     items: IBillItem[];
     totalAmount: number;
     createdAt: Date;
+    updatedAt: Date;
 }
 
 const billItemSchema = new Schema<IBillItem>(
@@ -24,24 +25,21 @@ const billItemSchema = new Schema<IBillItem>(
             ref: "MenuItem",
             required: true,
         },
-
         name: {
             type: String,
             required: true,
+            trim: true,
         },
-
         price: {
             type: Number,
             required: true,
             min: 0,
         },
-
         quantity: {
             type: Number,
             required: true,
             min: 1,
         },
-
         amount: {
             type: Number,
             required: true,
@@ -77,8 +75,10 @@ const billSchema = new Schema<IBill>(
             type: [billItemSchema],
             required: true,
             validate: {
-                validator: (items: IBillItem[]) => items.length > 0,
-                message: "Bill must contain at least one item",
+                validator: (items: IBillItem[]) =>
+                    items.length > 0,
+                message:
+                    "Bill must contain at least one item",
             },
         },
 
@@ -93,6 +93,9 @@ const billSchema = new Schema<IBill>(
     }
 );
 
-const Bill = mongoose.model<IBill>("Bill", billSchema);
+const Bill = mongoose.model<IBill>(
+    "Bill",
+    billSchema
+);
 
 export default Bill;

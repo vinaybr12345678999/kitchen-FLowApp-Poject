@@ -1,234 +1,915 @@
-/* =========================================
-KitchenFlow - Waiter Page
-========================================= */
+
+/* =========================================================
+   KitchenFlow - Waiter Dashboard
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   PAGE
+   ========================================================= */
 
 .waiter-page {
-min-height: 100vh;
-background: #f8fafc;
-padding: 40px 0;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Main container */
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.waiter-header {
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.waiter-header-inner {
+    max-width: 1200px;
+    min-height: 76px;
+    margin: 0 auto;
+    padding: 0 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.waiter-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.waiter-brand-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #7c3aed
+    );
+
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+
+    box-shadow:
+        0 6px 15px rgba(37, 99, 235, 0.25);
+}
+
+.waiter-brand-text h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.waiter-brand-text span {
+    display: block;
+    margin-top: 3px;
+
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* =========================================================
+   LOGOUT BUTTON
+   ========================================================= */
+
+.logout-button {
+    border: none;
+    outline: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 10px 17px;
+
+    border-radius: 10px;
+
+    background: #fff1f2;
+    color: #dc2626;
+
+    border: 1px solid #fecdd3;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #dc2626;
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 15px rgba(220, 38, 38, 0.2);
+}
+
+.logout-button:active {
+    transform: translateY(0);
+}
+
+.logout-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.waiter-main {
+    flex: 1;
+    padding: 45px 0 60px;
+}
+
 .waiter-container {
-max-width: 1100px;
+    max-width: 1100px;
 }
 
-/* Page title */
+/* =========================================================
+   PAGE HEADING
+   ========================================================= */
+
+.dashboard-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 6px 12px;
+    margin-bottom: 12px;
+
+    border-radius: 50px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    border: 1px solid #dbeafe;
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
 .waiter-title {
-color: #1e293b;
-font-size: 32px;
-font-weight: 700;
-margin-bottom: 8px;
+    color: #0f172a;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 8px;
 }
 
-/* Subtitle */
 .waiter-subtitle {
-color: #64748b;
-font-size: 16px;
-margin-bottom: 0;
+    color: #64748b;
+    font-size: 16px;
+    margin-bottom: 0;
+    line-height: 1.6;
 }
 
-/* =========================================
-Table Card
-========================================= */
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
 
 .table-card {
-min-height: 150px;
-padding: 25px 20px;
-border-radius: 16px;
-background: white;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-cursor: pointer;
+    min-height: 155px;
 
+    padding: 25px 20px;
 
-border: 2px solid transparent;
+    border-radius: 18px;
 
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
 
-transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
+    cursor: pointer;
 
+    border: 2px solid transparent;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.07);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        background 0.22s ease;
 }
 
-/* Hover effect */
 .table-card:hover {
-transform: translateY(-5px);
-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 25px rgba(15, 23, 42, 0.12);
 }
 
-/* =========================================
-Available Table
-========================================= */
+/* =========================================================
+   TABLE ICON
+   ========================================================= */
+
+.table-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    margin-bottom: 12px;
+
+    font-size: 22px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 10px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================================================
+   AVAILABLE
+   ========================================================= */
 
 .table-card.available {
-border-color: #22c55e;
-background: #f0fdf4;
+    border-color: #22c55e;
+    background: #f0fdf4;
 }
 
 .table-card.available:hover {
-background: #dcfce7;
+    background: #dcfce7;
 }
 
-/* =========================================
-Occupied Table
-========================================= */
+.table-card.available .table-icon {
+    background: #dcfce7;
+}
+
+/* =========================================================
+   OCCUPIED
+   ========================================================= */
 
 .table-card.occupied {
-border-color: #ef4444;
-background: #fef2f2;
+    border-color: #ef4444;
+    background: #fef2f2;
 }
 
 .table-card.occupied:hover {
-background: #fee2e2;
+    background: #fee2e2;
 }
 
-/* =========================================
-Selected Table
-========================================= */
+.table-card.occupied .table-icon {
+    background: #fee2e2;
+}
+
+/* =========================================================
+   SELECTED
+   ========================================================= */
 
 .table-card.selected {
-border-color: #2563eb;
-background: #eff6ff;
+    border-color: #2563eb;
+    background: #eff6ff;
 
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12),
+        0 12px 25px rgba(37, 99, 235, 0.15);
 
-box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.15),
-    0 8px 20px rgba(37, 99, 235, 0.15);
-
-transform: translateY(-5px);
-
-
+    transform: translateY(-5px);
 }
 
-/* =========================================
-Table Number
-========================================= */
+/* =========================================================
+   TABLE NUMBER
+   ========================================================= */
 
 .table-number {
-font-size: 22px;
-font-weight: 700;
-color: #1e293b;
-margin-bottom: 12px;
+    font-size: 21px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 9px;
 }
 
-/* =========================================
-Table Status
-========================================= */
+/* =========================================================
+   TABLE STATUS
+   ========================================================= */
 
 .table-status {
-margin: 0;
-font-size: 14px;
-font-weight: 700;
-letter-spacing: 0.5px;
+    margin: 0;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
 }
 
-/* Available status text */
 .table-card.available .table-status {
-color: #16a34a;
+    color: #16a34a;
 }
 
-/* Occupied status text */
 .table-card.occupied .table-status {
-color: #dc2626;
+    color: #dc2626;
 }
 
-/* =========================================
-Occupied Message
-========================================= */
+/* =========================================================
+   EXTRA ORDER
+   ========================================================= */
+
+.extra-order-text {
+    margin: 8px 0 0;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    color: #ea580c;
+}
+
+/* =========================================================
+   TABLE MESSAGES
+   ========================================================= */
 
 .table-occupied-message {
-background: #fee2e2;
-color: #b91c1c;
+    background: #fff7ed;
+    color: #c2410c;
 
+    padding: 14px 20px;
 
-padding: 14px 20px;
-border-radius: 10px;
+    border-radius: 11px;
 
-font-size: 15px;
-font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
 
-border: 1px solid #fecaca;
-
-
+    border: 1px solid #fed7aa;
 }
-
-/* =========================================
-Selected Table Message
-========================================= */
 
 .table-selected-message {
-background: #dcfce7;
-color: #15803d;
+    background: #f0fdf4;
+    color: #15803d;
 
+    padding: 14px 20px;
 
-padding: 14px 20px;
-border-radius: 10px;
+    border-radius: 11px;
 
-font-size: 16px;
-font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
 
-border: 1px solid #bbf7d0;
-
-
+    border: 1px solid #bbf7d0;
 }
 
-/* =========================================
-Loading / Error
-========================================= */
+/* =========================================================
+   ORDERS SECTION
+   ========================================================= */
 
-.waiter-page .waiter-title.text-center {
-padding-top: 40px;
+.orders-section {
+    padding-top: 10px;
 }
 
-/* =========================================
-Responsive Design
-========================================= */
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-@media (max-width: 768px) {
-.waiter-page {
-padding: 25px 0;
+    margin-bottom: 22px;
+
+    padding-bottom: 16px;
+
+    border-bottom: 1px solid #e2e8f0;
 }
 
+.section-heading h2 {
+    margin: 3px 0 0;
 
-.waiter-title {
-    font-size: 27px;
+    color: #0f172a;
+
+    font-size: 25px;
+    font-weight: 800;
 }
 
-.waiter-subtitle {
+.section-label {
+    color: #64748b;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.order-count {
+    min-width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    border: 1px solid #dbeafe;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   ORDER CARD
+   ========================================================= */
+
+.order-card {
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    margin-bottom: 16px;
+
+    box-shadow:
+        0 4px 14px rgba(15, 23, 42, 0.06);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 22px rgba(15, 23, 42, 0.09);
+}
+
+.order-card hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+
+    margin: 16px 0;
+}
+
+/* =========================================================
+   ORDER HEADER
+   ========================================================= */
+
+.order-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.order-table-label {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 3px;
+}
+
+.order-card-header h3 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   ORDER STATUS
+   ========================================================= */
+
+.order-status {
+    padding: 7px 12px;
+
+    border-radius: 50px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+.order-status.new {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+.order-status.preparing {
+    color: #c2410c;
+    background: #ffedd5;
+}
+
+.order-status.ready {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.order-status.served {
+    color: #475569;
+    background: #f1f5f9;
+}
+
+/* =========================================================
+   ORDER ITEM
+   ========================================================= */
+
+.order-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item strong {
+    color: #1e293b;
+
+    font-size: 15px;
+}
+
+.order-item p {
+    margin: 6px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.item-quantity {
+    min-width: 40px;
+
+    padding: 5px 9px;
+
+    text-align: center;
+
+    border-radius: 7px;
+
+    background: #f1f5f9;
+
+    color: #334155;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   ORDER INFO
+   ========================================================= */
+
+.order-info {
+    margin-top: 15px;
+
+    padding: 11px 14px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.new-info {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.preparing-info {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+/* =========================================================
+   SERVE BUTTON
+   ========================================================= */
+
+.serve-button {
+    width: 100%;
+
+    margin-top: 16px;
+
+    padding: 12px 18px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #16a34a,
+        #15803d
+    );
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 12px rgba(22, 163, 74, 0.2);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.serve-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 18px rgba(22, 163, 74, 0.28);
+}
+
+.serve-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* =========================================================
+   NO ORDERS
+   ========================================================= */
+
+.no-orders {
+    background: #ffffff;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 16px;
+
+    padding: 45px 20px;
+
+    text-align: center;
+}
+
+.no-orders-icon {
+    width: 55px;
+    height: 55px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #dcfce7;
+    color: #16a34a;
+
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.no-orders h4 {
+    margin-bottom: 6px;
+
+    color: #334155;
+
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.no-orders p {
+    margin: 0;
+
+    color: #94a3b8;
+
     font-size: 14px;
 }
 
-.table-card {
-    min-height: 140px;
-    padding: 20px;
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.waiter-footer {
+    margin-top: auto;
+
+    background: #0f172a;
+    color: #ffffff;
 }
 
-.table-number {
-    font-size: 20px;
+.waiter-footer-inner {
+    max-width: 1200px;
+
+    min-height: 80px;
+
+    margin: 0 auto;
+
+    padding: 18px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
 }
 
+.waiter-footer-inner > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
+.waiter-footer-inner strong {
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.waiter-footer-inner span {
+    color: #94a3b8;
+
+    font-size: 13px;
+}
+
+.waiter-footer-inner p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .waiter-header-inner {
+        min-height: 70px;
+        padding: 0 18px;
+    }
+
+    .waiter-brand-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .waiter-brand-text h2 {
+        font-size: 17px;
+    }
+
+    .waiter-brand-text span {
+        font-size: 11px;
+    }
+
+    .waiter-main {
+        padding: 30px 0 45px;
+    }
+
+    .waiter-title {
+        font-size: 27px;
+    }
+
+    .waiter-subtitle {
+        font-size: 14px;
+    }
+
+    .table-card {
+        min-height: 145px;
+    }
+
+    .section-heading h2 {
+        font-size: 22px;
+    }
+
+    .waiter-footer-inner {
+        padding: 18px;
+
+        flex-direction: column;
+        justify-content: center;
+
+        text-align: center;
+    }
+
+    .waiter-footer-inner > div {
+        flex-direction: column;
+        gap: 3px;
+    }
 }
 
 @media (max-width: 576px) {
-.waiter-page {
-padding: 20px 10px;
+
+    .waiter-header-inner {
+        padding: 0 12px;
+    }
+
+    .waiter-brand {
+        gap: 9px;
+    }
+
+    .waiter-brand-icon {
+        width: 39px;
+        height: 39px;
+
+        border-radius: 10px;
+
+        font-size: 13px;
+    }
+
+    .waiter-brand-text h2 {
+        font-size: 16px;
+    }
+
+    .waiter-brand-text span {
+        font-size: 10px;
+    }
+
+    .logout-button {
+        padding: 9px 12px;
+        font-size: 13px;
+    }
+
+    .logout-icon {
+        font-size: 16px;
+    }
+
+    .waiter-main {
+        padding: 25px 10px 40px;
+    }
+
+    .waiter-title {
+        font-size: 24px;
+    }
+
+    .dashboard-badge {
+        font-size: 10px;
+    }
+
+    .table-card {
+        min-height: 135px;
+    }
+
+    .order-card {
+        padding: 17px;
+    }
+
+    .order-card-header h3 {
+        font-size: 18px;
+    }
+
+    .order-status {
+        padding: 6px 9px;
+        font-size: 10px;
+    }
+
+    .section-heading h2 {
+        font-size: 20px;
+    }
 }
 
-
-.waiter-title {
-    font-size: 24px;
-}
-
-.table-card {
-    min-height: 130px;
-}
-
-
-}

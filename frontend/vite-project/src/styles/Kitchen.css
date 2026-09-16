@@ -1,0 +1,584 @@
+
+/* ========================================
+   KITCHEN PAGE
+======================================== */
+
+.kitchen-page {
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.kitchen-header {
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.kitchen-header-inner {
+    max-width: 1200px;
+    min-height: 76px;
+    margin: auto;
+    padding: 0 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kitchen-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kitchen-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #fff7ed;
+    border-radius: 12px;
+
+    font-size: 23px;
+}
+
+.kitchen-logo {
+    margin: 0;
+    color: #1e293b;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.kitchen-role {
+    display: block;
+    margin-top: 2px;
+
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+/* ========================================
+   LOGOUT BUTTON
+======================================== */
+
+.logout-button {
+    border: none;
+    outline: none;
+
+    padding: 10px 18px;
+
+    border-radius: 10px;
+
+    background: #fee2e2;
+    color: #dc2626;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #fecaca;
+    color: #b91c1c;
+
+    transform: translateY(-1px);
+}
+
+.logout-icon {
+    font-size: 18px;
+}
+
+
+/* ========================================
+   MAIN CONTAINER
+======================================== */
+
+.kitchen-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 35px 25px 50px;
+}
+
+
+/* ========================================
+   PAGE HEADING
+======================================== */
+
+.kitchen-page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+}
+
+.kitchen-page-heading h1 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.kitchen-page-heading p {
+    margin: 7px 0 0;
+
+    color: #64748b;
+    font-size: 15px;
+}
+
+
+/* ========================================
+   REFRESH
+======================================== */
+
+.refresh-button {
+    border: 1px solid #cbd5e1;
+
+    background: white;
+    color: #334155;
+
+    padding: 10px 17px;
+
+    border-radius: 10px;
+
+    font-weight: 700;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.refresh-button:hover {
+    background: #f1f5f9;
+}
+
+
+/* ========================================
+   ERROR
+======================================== */
+
+.kitchen-error {
+    margin-bottom: 25px;
+
+    padding: 14px 18px;
+
+    background: #fef2f2;
+    color: #b91c1c;
+
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+
+    font-weight: 600;
+}
+
+
+/* ========================================
+   ORDERS GRID
+======================================== */
+
+.kitchen-orders-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 22px;
+}
+
+
+/* ========================================
+   ORDER CARD
+======================================== */
+
+.kitchen-order-card {
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+        0 5px 18px
+        rgba(15, 23, 42, 0.07);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kitchen-order-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(15, 23, 42, 0.1);
+}
+
+
+/* ========================================
+   STATUS LEFT BORDER
+======================================== */
+
+.kitchen-order-card.new {
+    border-top: 4px solid #3b82f6;
+}
+
+.kitchen-order-card.preparing {
+    border-top: 4px solid #f59e0b;
+}
+
+.kitchen-order-card.ready {
+    border-top: 4px solid #22c55e;
+}
+
+
+/* ========================================
+   ORDER HEADER
+======================================== */
+
+.order-card-header {
+    padding: 20px 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.order-label {
+    color: #94a3b8;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.order-card-header h2 {
+    margin: 3px 0 0;
+
+    color: #1e293b;
+
+    font-size: 23px;
+    font-weight: 800;
+}
+
+
+/* ========================================
+   STATUS BADGE
+======================================== */
+
+.status-badge {
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.status-badge.new {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.status-badge.preparing {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge.ready {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+
+/* ========================================
+   ITEMS
+======================================== */
+
+.order-items {
+    padding: 8px 22px;
+}
+
+.kitchen-item {
+    padding: 15px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.kitchen-item:last-child {
+    border-bottom: none;
+}
+
+.item-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+}
+
+.item-name {
+    color: #1e293b;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.item-quantity {
+    min-width: 45px;
+
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    background: #f1f5f9;
+    color: #334155;
+
+    text-align: center;
+
+    font-weight: 800;
+}
+
+.item-instructions {
+    margin-top: 7px;
+
+    padding: 9px 11px;
+
+    background: #fffbeb;
+
+    border-radius: 7px;
+
+    color: #92400e;
+
+    font-size: 13px;
+}
+
+
+/* ========================================
+   ACTION
+======================================== */
+
+.order-action {
+    padding: 18px 22px;
+
+    background: #f8fafc;
+}
+
+
+/* ========================================
+   PREPARE BUTTON
+======================================== */
+
+.prepare-button,
+.ready-button {
+    width: 100%;
+
+    border: none;
+
+    padding: 12px 18px;
+
+    border-radius: 10px;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.prepare-button {
+    background: #f59e0b;
+}
+
+.prepare-button:hover {
+    background: #d97706;
+}
+
+.ready-button {
+    background: #16a34a;
+}
+
+.ready-button:hover {
+    background: #15803d;
+}
+
+.prepare-button:disabled,
+.ready-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   READY MESSAGE
+======================================== */
+
+.ready-message {
+    width: 100%;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background: #dcfce7;
+    color: #15803d;
+
+    text-align: center;
+
+    font-weight: 800;
+}
+
+
+/* ========================================
+   NO ORDERS
+======================================== */
+
+.no-orders-card {
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 18px;
+
+    padding: 60px 20px;
+
+    text-align: center;
+
+    box-shadow:
+        0 5px 18px
+        rgba(15, 23, 42, 0.05);
+}
+
+.no-orders-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+}
+
+.no-orders-card h2 {
+    margin: 0 0 8px;
+
+    color: #1e293b;
+}
+
+.no-orders-card p {
+    margin: 0;
+
+    color: #64748b;
+}
+
+
+/* ========================================
+   LOADING
+======================================== */
+
+.kitchen-loading {
+    padding: 100px 20px;
+
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+
+    .kitchen-header-inner {
+        padding: 0 15px;
+    }
+
+    .kitchen-container {
+        padding: 25px 15px 40px;
+    }
+
+    .kitchen-page-heading {
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .kitchen-page-heading h1 {
+        font-size: 26px;
+    }
+
+    .kitchen-orders-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kitchen-logo {
+        font-size: 19px;
+    }
+
+    .kitchen-role {
+        font-size: 12px;
+    }
+
+    .kitchen-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .logout-button {
+        padding: 9px 13px;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .kitchen-page-heading {
+        flex-direction: column;
+    }
+
+    .refresh-button {
+        width: 100%;
+    }
+
+    .kitchen-brand {
+        gap: 8px;
+    }
+
+    .kitchen-icon {
+        font-size: 20px;
+    }
+
+    .logout-button {
+        font-size: 13px;
+    }
+}
+

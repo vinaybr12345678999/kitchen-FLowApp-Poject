@@ -1,8 +1,11 @@
+
 import { useEffect, useState } from "react";
 import {
     getActiveOrders,
     updateOrderStatus,
 } from "../services/orderService";
+import { useNavigate } from "react-router-dom";
+import "../styles/Kitchen.css";
 
 interface KitchenItem {
     name: string;
@@ -18,12 +21,31 @@ interface KitchenOrder {
 }
 
 const Kitchen = () => {
+    const navigate = useNavigate();
+
     const [orders, setOrders] = useState<KitchenOrder[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [updatingOrder, setUpdatingOrder] = useState<string | null>(null);
+    const [updatingOrder, setUpdatingOrder] =
+        useState<string | null>(null);
 
-    // Fetch active orders
+    // ========================================
+    // LOGOUT
+    // ========================================
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+
+        // If you are storing user data, remove it too
+        localStorage.removeItem("user");
+
+        navigate("/login");
+    };
+
+    // ========================================
+    // FETCH ACTIVE ORDERS
+    // ========================================
+
     const fetchOrders = async () => {
         try {
             setLoading(true);
@@ -33,7 +55,10 @@ const Kitchen = () => {
 
             setOrders(data);
         } catch (error: any) {
-            console.error("Failed to fetch orders:", error);
+            console.error(
+                "Failed to fetch orders:",
+                error
+            );
 
             setError(
                 error.response?.data?.message ||
@@ -44,7 +69,10 @@ const Kitchen = () => {
         }
     };
 
-    // Update order status
+    // ========================================
+    // UPDATE ORDER STATUS
+    // ========================================
+
     const handleStatusChange = async (
         orderId: string,
         status: "PREPARING" | "READY"
@@ -53,12 +81,17 @@ const Kitchen = () => {
             setUpdatingOrder(orderId);
             setError("");
 
-            await updateOrderStatus(orderId, status);
+            await updateOrderStatus(
+                orderId,
+                status
+            );
 
-            // Get latest orders
             await fetchOrders();
         } catch (error: any) {
-            console.error("Failed to update order:", error);
+            console.error(
+                "Failed to update order:",
+                error
+            );
 
             setError(
                 error.response?.data?.message ||
@@ -69,142 +102,297 @@ const Kitchen = () => {
         }
     };
 
-    // Load orders when page opens
+    // ========================================
+    // LOAD ORDERS
+    // ========================================
+
     useEffect(() => {
-    fetchOrders();
-
-    const interval = setInterval(() => {
         fetchOrders();
-    }, 15000);
+    }, []);
 
-    return () => {
-        clearInterval(interval);
-    };
-}, []);
+    // ========================================
+    // LOADING
+    // ========================================
 
-    // Loading
     if (loading) {
-        return <p>Loading kitchen orders...</p>;
+        return (
+            <div className="kitchen-page">
+                <header className="kitchen-header">
+                    <div className="kitchen-header-inner">
+                        <div>
+                            <h2 className="kitchen-logo">
+                                🍳 KitchenFlow
+                            </h2>
+                            <span className="kitchen-role">
+                                Kitchen Dashboard
+                            </span>
+                        </div>
+
+                        <button
+                            className="logout-button"
+                            onClick={handleLogout}
+                        >
+                            ↪ Logout
+                        </button>
+                    </div>
+                </header>
+
+                <div className="kitchen-container">
+                    <div className="kitchen-loading">
+                        Loading kitchen orders...
+                    </div>
+                </div>
+            </div>
+        );
     }
 
+    // ========================================
+    // UI
+    // ========================================
+
     return (
-        <div style={{ padding: "30px" }}>
-            <h1>Kitchen Screen</h1>
+        <div className="kitchen-page">
 
-            {/* Refresh
-            <button onClick={fetchOrders}>
-                Refresh Orders
-            </button> */}
+            {/* ========================================
+                HEADER
+            ======================================== */}
 
-            {/* Error */}
-            {error && (
-                <p style={{ color: "red" }}>
-                    {error}
-                </p>
-            )}
+            <header className="kitchen-header">
+                <div className="kitchen-header-inner">
 
-            {/* No orders */}
-            {orders.length === 0 ? (
-                <p>No active orders.</p>
-            ) : (
-                orders.map((order) => (
-                    <div
-                        key={order._id}
-                        style={{
-                            border: "1px solid #ccc",
-                            padding: "20px",
-                            margin: "20px 0",
-                            borderRadius: "10px",
-                            maxWidth: "500px",
-                        }}
+                    <div className="kitchen-brand">
+                        <div className="kitchen-icon">
+                            🍳
+                        </div>
+
+                        <div>
+                            <h2 className="kitchen-logo">
+                                KitchenFlow
+                            </h2>
+
+                            <span className="kitchen-role">
+                                Kitchen Dashboard
+                            </span>
+                        </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        className="logout-button"
+                        onClick={handleLogout}
                     >
-                        {/* Table */}
+                        <span className="logout-icon">
+                            ↪
+                        </span>
+                        Logout
+                    </button>
+
+                </div>
+            </header>
+
+            {/* ========================================
+                MAIN
+            ======================================== */}
+
+            <main className="kitchen-container">
+
+                <div className="kitchen-page-heading">
+                    <div>
+                        <h1>
+                            Kitchen Orders
+                        </h1>
+
+                        <p>
+                            Manage incoming orders
+                            and update their status.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        className="refresh-button"
+                        onClick={fetchOrders}
+                    >
+                        ↻ Refresh
+                    </button>
+                </div>
+
+                {/* ERROR */}
+
+                {error && (
+                    <div className="kitchen-error">
+                        ⚠ {error}
+                    </div>
+                )}
+
+                {/* NO ORDERS */}
+
+                {orders.length === 0 ? (
+                    <div className="no-orders-card">
+                        <div className="no-orders-icon">
+                            🍽️
+                        </div>
+
                         <h2>
-                            Table {order.tableNumber}
+                            No Active Orders
                         </h2>
 
-                        {/* Status */}
                         <p>
-                            <strong>Status:</strong>{" "}
-                            {order.status}
+                            New orders will appear
+                            here when customers place
+                            them.
                         </p>
+                    </div>
+                ) : (
+                    <div className="kitchen-orders-grid">
 
-                        {/* Items */}
-                        {order.items.map((item, index) => (
-                            <div key={index}>
-                                <p>
-                                    <strong>
-                                        {item.name}
-                                    </strong>
-                                </p>
+                        {orders.map((order) => (
 
-                                <p>
-                                    Quantity: {item.quantity}
-                                </p>
+                            <div
+                                key={order._id}
+                                className={`kitchen-order-card ${order.status.toLowerCase()}`}
+                            >
 
-                                {item.instructions && (
-                                    <p>
-                                        <strong>
-                                            Instructions:
-                                        </strong>{" "}
-                                        {item.instructions}
-                                    </p>
-                                )}
+                                {/* CARD HEADER */}
+
+                                <div className="order-card-header">
+
+                                    <div>
+                                        <span className="order-label">
+                                            ORDER
+                                        </span>
+
+                                        <h2>
+                                            Table{" "}
+                                            {order.tableNumber}
+                                        </h2>
+                                    </div>
+
+                                    <span
+                                        className={`status-badge ${order.status.toLowerCase()}`}
+                                    >
+                                        {order.status}
+                                    </span>
+
+                                </div>
+
+                                {/* ITEMS */}
+
+                                <div className="order-items">
+
+                                    {order.items.map(
+                                        (
+                                            item,
+                                            index
+                                        ) => (
+
+                                            <div
+                                                key={index}
+                                                className="kitchen-item"
+                                            >
+
+                                                <div className="item-main">
+
+                                                    <div className="item-name">
+                                                        {
+                                                            item.name
+                                                        }
+                                                    </div>
+
+                                                    <div className="item-quantity">
+                                                        ×{" "}
+                                                        {
+                                                            item.quantity
+                                                        }
+                                                    </div>
+
+                                                </div>
+
+                                                {item.instructions && (
+                                                    <div className="item-instructions">
+                                                        <strong>
+                                                            Note:
+                                                        </strong>{" "}
+                                                        {
+                                                            item.instructions
+                                                        }
+                                                    </div>
+                                                )}
+
+                                            </div>
+
+                                        )
+                                    )}
+
+                                </div>
+
+                                {/* ACTION */}
+
+                                <div className="order-action">
+
+                                    {order.status ===
+                                        "NEW" && (
+                                        <button
+                                            type="button"
+                                            className="prepare-button"
+                                            onClick={() =>
+                                                handleStatusChange(
+                                                    order._id,
+                                                    "PREPARING"
+                                                )
+                                            }
+                                            disabled={
+                                                updatingOrder ===
+                                                order._id
+                                            }
+                                        >
+                                            {updatingOrder ===
+                                            order._id
+                                                ? "Updating..."
+                                                : "👨‍🍳 Start Preparing"}
+                                        </button>
+                                    )}
+
+                                    {order.status ===
+                                        "PREPARING" && (
+                                        <button
+                                            type="button"
+                                            className="ready-button"
+                                            onClick={() =>
+                                                handleStatusChange(
+                                                    order._id,
+                                                    "READY"
+                                                )
+                                            }
+                                            disabled={
+                                                updatingOrder ===
+                                                order._id
+                                            }
+                                        >
+                                            {updatingOrder ===
+                                            order._id
+                                                ? "Updating..."
+                                                : "✓ Mark Ready"}
+                                        </button>
+                                    )}
+
+                                    {order.status ===
+                                        "READY" && (
+                                        <div className="ready-message">
+                                            ✓ Order Ready
+                                        </div>
+                                    )}
+
+                                </div>
+
                             </div>
+
                         ))}
 
-                        {/* NEW → PREPARING */}
-                        {order.status === "NEW" && (
-                            <button
-                                onClick={() =>
-                                    handleStatusChange(
-                                        order._id,
-                                        "PREPARING"
-                                    )
-                                }
-                                disabled={
-                                    updatingOrder === order._id
-                                }
-                            >
-                                {updatingOrder === order._id
-                                    ? "Updating..."
-                                    : "Start Preparing"}
-                            </button>
-                        )}
-
-                        {/* PREPARING → READY */}
-                        {order.status === "PREPARING" && (
-                            <button
-                                onClick={() =>
-                                    handleStatusChange(
-                                        order._id,
-                                        "READY"
-                                    )
-                                }
-                                disabled={
-                                    updatingOrder === order._id
-                                }
-                            >
-                                {updatingOrder === order._id
-                                    ? "Updating..."
-                                    : "Mark Ready"}
-                            </button>
-                        )}
-
-                        {/* READY */}
-                        {order.status === "READY" && (
-                            <p
-                                style={{
-                                    color: "green",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                ✓ Order Ready
-                            </p>
-                        )}
                     </div>
-                ))
-            )}
+                )}
+
+            </main>
         </div>
     );
 };

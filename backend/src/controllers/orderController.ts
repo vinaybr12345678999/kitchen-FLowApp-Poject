@@ -1,11 +1,28 @@
 import { Request, Response } from "express";
+
 import Order from "../models/order";
 import MenuItem from "../models/menuitem";
 import Table from "../models/table";
 
 // ========================================
-// CREATE NEW ORDER
+// CREATE / ADD ORDER
 // POST /api/orders
+//
+// IMPORTANT:
+//
+// First order:
+// Table AVAILABLE
+//     ↓
+// Create Order #23
+//
+// Extra order:
+// Table OCCUPIED
+//     ↓
+// DO NOT create Order #24
+//     ↓
+// Add items into existing Order #23
+//
+// Therefore order count remains same.
 // ========================================
 
 export const createOrder = async (
@@ -13,9 +30,16 @@ export const createOrder = async (
     res: Response
 ): Promise<void> => {
     try {
-        const { tableId, tableNumber, items } = req.body || {};
+        const {
+            tableId,
+            tableNumber,
+            items,
+        } = req.body || {};
 
-        // Validate request
+        // ========================================
+        // VALIDATE REQUEST
+        // ========================================
+
         if (
             !tableId ||
             tableNumber === undefined ||
@@ -23,126 +47,314 @@ export const createOrder = async (
             items.length === 0
         ) {
             res.status(400).json({
-                message: "Table and order items are required",
+                message:
+                    "Table and order items are required",
             });
+
             return;
         }
 
-        // Validate table number
-        if (typeof tableNumber !== "number") {
+        // ========================================
+        // VALIDATE TABLE NUMBER
+        // ========================================
+
+        if (
+            typeof tableNumber !== "number"
+        ) {
             res.status(400).json({
-                message: "Invalid table number",
+                message:
+                    "Invalid table number",
             });
+
             return;
         }
 
-        // Find table
-        const table = await Table.findById(tableId);
+        // ========================================
+        // FIND TABLE
+        // ========================================
+
+        const table =
+            await Table.findById(tableId);
 
         if (!table) {
             res.status(404).json({
-                message: "Table not found",
+                message:
+                    "Table not found",
             });
+
             return;
         }
 
-        // Check table availability
-        if (table.status === "OCCUPIED") {
-            res.status(400).json({
-                message: "Table is already occupied",
-            });
-            return;
-        }
+        // ========================================
+        // PREPARE ITEMS
+        // ========================================
 
-        // Prepare order items
         const orderItems: any[] = [];
 
         for (const item of items) {
-            // Check menu item ID
+            // ========================================
+            // MENU ITEM ID
+            // ========================================
+
             if (!item.menuItemId) {
                 res.status(400).json({
-                    message: "Menu item ID is required",
+                    message:
+                        "Menu item ID is required",
                 });
+
                 return;
             }
 
-            // Find menu item
-            const menuItem = await MenuItem.findById(
-                item.menuItemId
-            );
+            // ========================================
+            // FIND MENU ITEM
+            // ========================================
+
+            const menuItem =
+                await MenuItem.findById(
+                    item.menuItemId
+                );
 
             if (!menuItem) {
                 res.status(404).json({
                     message:
                         `Menu item not found: ${item.menuItemId}`,
                 });
+
                 return;
             }
 
-            // Check menu availability
-            if (!menuItem.isAvailable) {
+            // ========================================
+            // CHECK AVAILABILITY
+            // ========================================
+
+            if (
+                !menuItem.isAvailable
+            ) {
                 res.status(400).json({
                     message:
                         `${menuItem.name} is not available`,
                 });
+
                 return;
             }
 
-            // Validate quantity
+            // ========================================
+            // VALIDATE QUANTITY
+            // ========================================
+
             if (
-                typeof item.quantity !== "number" ||
-                !Number.isInteger(item.quantity) ||
+                typeof item.quantity !==
+                    "number" ||
+                !Number.isInteger(
+                    item.quantity
+                ) ||
                 item.quantity < 1
             ) {
                 res.status(400).json({
                     message:
                         `Invalid quantity for ${menuItem.name}`,
                 });
+
                 return;
             }
 
-            // Add order item
+            // ========================================
+            // ADD ITEM
+            // ========================================
+
             orderItems.push({
-                menuItemId: menuItem._id,
-                name: menuItem.name,
-                price: menuItem.price,
-                quantity: item.quantity,
+                menuItemId:
+                    menuItem._id,
+
+                name:
+                    menuItem.name,
+
+                price:
+                    menuItem.price,
+
+                quantity:
+                    item.quantity,
+
                 instructions:
-                    typeof item.instructions === "string"
+                    typeof item.instructions ===
+                    "string"
                         ? item.instructions.trim()
                         : "",
             });
         }
 
-        // Calculate total amount
-        const totalAmount = orderItems.reduce(
-            (total, item) => {
-                return (
-                    total +
-                    item.price * item.quantity
-                );
-            },
-            0
-        );
+        // ========================================
+        // CALCULATE NEW ITEMS TOTAL
+        // ========================================
 
-        // Create order
-        const order = await Order.create({
-            tableId,
-            tableNumber,
-            items: orderItems,
-            totalAmount,
-            status: "NEW",
-        });
+        const newItemsTotal =
+            orderItems.reduce(
+                (
+                    total,
+                    item
+                ) => {
+                    return (
+                        total +
+                        item.price *
+                            item.quantity
+                    );
+                },
+                0
+            );
 
-        // Mark table as occupied
-        table.status = "OCCUPIED";
+        // ========================================
+        // FIND CURRENT TABLE SESSION
+        //
+        // IMPORTANT:
+        //
+        // Find unpaid order for this table.
+        //
+        // PAID orders are ignored.
+        //
+        // This is what prevents:
+        //
+        // Order 23
+        // Extra order -> Order 24
+        //
+        // Instead:
+        //
+        // Order 23
+        // Extra order -> same Order 23
+        // ========================================
 
-        await table.save();
+        const existingOrder =
+            await Order.findOne({
+                tableId,
+                status: {
+                    $ne: "PAID",
+                },
+            }).sort({
+                createdAt: -1,
+            });
 
-        // Response
+        // ========================================
+        // EXTRA ORDER
+        // ========================================
+
+        if (existingOrder) {
+            // ------------------------------------
+            // Add items to complete order
+            // ------------------------------------
+
+            existingOrder.items.push(
+                ...orderItems
+            );
+
+            // ------------------------------------
+            // Add items to pendingItems
+            //
+            // Kitchen sees only these new items.
+            // ------------------------------------
+
+            existingOrder.pendingItems.push(
+                ...orderItems
+            );
+
+            // ------------------------------------
+            // Add new amount
+            // ------------------------------------
+
+            existingOrder.totalAmount +=
+                newItemsTotal;
+
+            // ------------------------------------
+            // IMPORTANT
+            //
+            // Existing order could be:
+            //
+            // SERVED
+            //
+            // Extra food comes.
+            //
+            // We move it back to NEW so kitchen
+            // can process the extra food.
+            // ------------------------------------
+
+            existingOrder.status =
+                "NEW";
+
+            await existingOrder.save();
+
+            // ------------------------------------
+            // Table remains occupied
+            // ------------------------------------
+
+            if (
+                table.status !==
+                "OCCUPIED"
+            ) {
+                table.status =
+                    "OCCUPIED";
+
+                await table.save();
+            }
+
+            res.status(200).json({
+                message:
+                    "Extra items added to existing order",
+                order:
+                    existingOrder,
+                isExtraOrder:
+                    true,
+            });
+
+            return;
+        }
+
+        // ========================================
+        // FIRST ORDER
+        // ========================================
+
+        const order =
+            await Order.create({
+                tableId,
+
+                tableNumber,
+
+                items:
+                    orderItems,
+
+                pendingItems:
+                    orderItems,
+
+                totalAmount:
+                    newItemsTotal,
+
+                status:
+                    "NEW",
+            });
+
+        // ========================================
+        // TABLE -> OCCUPIED
+        // ========================================
+
+        if (
+            table.status !==
+            "OCCUPIED"
+        ) {
+            table.status =
+                "OCCUPIED";
+
+            await table.save();
+        }
+
+        // ========================================
+        // RESPONSE
+        // ========================================
+
         res.status(201).json({
-            message: "Order placed successfully",
+            message:
+                "Order placed successfully",
+
             order,
+
+            isExtraOrder:
+                false,
         });
     } catch (error) {
         console.error(
@@ -151,7 +363,9 @@ export const createOrder = async (
         );
 
         res.status(500).json({
-            message: "Failed to place order",
+            message:
+                "Failed to place order",
+
             error:
                 error instanceof Error
                     ? error.message
@@ -162,14 +376,28 @@ export const createOrder = async (
 
 // ========================================
 // GET ACTIVE ORDERS
+// GET /api/orders/active
+//
 // Kitchen + Waiter
 //
-// NEW
-// PREPARING
-// READY
-// SERVED
+// IMPORTANT:
 //
-// GET /api/orders/active
+// For kitchen:
+//
+// pendingItems are returned.
+//
+// So if old order had:
+//
+// Masala Dosa × 2
+//
+// and customer adds:
+//
+// Paneer × 1
+//
+// Kitchen gets only:
+//
+// Paneer × 1
+//
 // ========================================
 
 export const getActiveOrders = async (
@@ -177,40 +405,86 @@ export const getActiveOrders = async (
     res: Response
 ): Promise<void> => {
     try {
-        const orders = await Order.find({
-            status: {
-                $in: [
-                    "NEW",
-                    "PREPARING",
-                    "READY",
-                    "SERVED",
-                ],
-            },
-        })
-            .sort({ createdAt: 1 })
-            .lean();
-
-        const activeOrders = orders.map(
-            (order) => ({
-                _id: order._id,
-                tableId: order.tableId,
-                tableNumber: order.tableNumber,
-                status: order.status,
-
-                items: order.items.map(
-                    (item) => ({
-                        name: item.name,
-                        quantity: item.quantity,
-                        instructions:
-                            item.instructions || "",
-                    })
-                ),
-
-                createdAt: order.createdAt,
+        const orders =
+            await Order.find({
+                status: {
+                    $in: [
+                        "NEW",
+                        "PREPARING",
+                        "READY",
+                        "SERVED",
+                    ],
+                },
             })
-        );
+                .sort({
+                    createdAt: 1,
+                })
+                .lean();
 
-        res.status(200).json(activeOrders);
+        const activeOrders =
+            orders.map(
+                (order) => ({
+                    _id:
+                        order._id,
+
+                    tableId:
+                        order.tableId,
+
+                    tableNumber:
+                        order.tableNumber,
+
+                    status:
+                        order.status,
+
+                    // --------------------------------
+                    // IMPORTANT
+                    //
+                    // Kitchen gets pending items.
+                    // --------------------------------
+
+                    items:
+                        order.pendingItems &&
+                        order.pendingItems.length >
+                            0
+                            ? order.pendingItems.map(
+                                  (
+                                      item
+                                  ) => ({
+                                      name:
+                                          item.name,
+
+                                      quantity:
+                                          item.quantity,
+
+                                      instructions:
+                                          item.instructions ||
+                                          "",
+                                  })
+                              )
+                            : order.items.map(
+                                  (
+                                      item
+                                  ) => ({
+                                      name:
+                                          item.name,
+
+                                      quantity:
+                                          item.quantity,
+
+                                      instructions:
+                                          item.instructions ||
+                                          "",
+                                  })
+                              ),
+
+                    createdAt:
+                        order.createdAt,
+                })
+            );
+
+        res.status(200).json(
+            activeOrders
+        );
     } catch (error) {
         console.error(
             "Get active orders error:",
@@ -220,6 +494,7 @@ export const getActiveOrders = async (
         res.status(500).json({
             message:
                 "Failed to fetch active orders",
+
             error:
                 error instanceof Error
                     ? error.message
@@ -230,15 +505,15 @@ export const getActiveOrders = async (
 
 // ========================================
 // GET ALL ORDERS
+// GET /api/orders/all
+//
 // Manager
 //
-// NEW
-// PREPARING
-// READY
-// SERVED
-// PAID
+// IMPORTANT:
 //
-// GET /api/orders/all
+// One table session = one order.
+//
+// Extra food does NOT create another order.
 // ========================================
 
 export const getAllOrders = async (
@@ -246,11 +521,16 @@ export const getAllOrders = async (
     res: Response
 ): Promise<void> => {
     try {
-        const orders = await Order.find({})
-            .sort({ createdAt: 1 })
-            .lean();
+        const orders =
+            await Order.find({})
+                .sort({
+                    createdAt: 1,
+                })
+                .lean();
 
-        res.status(200).json(orders);
+        res.status(200).json(
+            orders
+        );
     } catch (error) {
         console.error(
             "Get all orders error:",
@@ -260,6 +540,7 @@ export const getAllOrders = async (
         res.status(500).json({
             message:
                 "Failed to fetch all orders",
+
             error:
                 error instanceof Error
                     ? error.message
@@ -270,118 +551,185 @@ export const getAllOrders = async (
 
 // ========================================
 // UPDATE ORDER STATUS
-//
-// NEW → PREPARING
-// PREPARING → READY
-// READY → SERVED
-//
-// PAID is handled by billing controller
-//
 // PATCH /api/orders/:orderId/status
+//
+// NEW -> PREPARING
+// PREPARING -> READY
+// READY -> SERVED
+//
 // ========================================
 
-export const updateOrderStatus = async (
-    req: Request,
-    res: Response
-): Promise<void> => {
-    try {
-        const { orderId } = req.params;
-        const { status } = req.body || {};
+export const updateOrderStatus =
+    async (
+        req: Request,
+        res: Response
+    ): Promise<void> => {
+        try {
+            // ========================================
+            // FIX TS ERROR
+            // ========================================
 
-        // Only kitchen/order workflow statuses
-        // are allowed here.
-        //
-        // PAID should NOT be manually changed
-        // from this endpoint.
+            const orderId =
+                Array.isArray(
+                    req.params.orderId
+                )
+                    ? req.params.orderId[0]
+                    : req.params.orderId;
 
-        const allowedStatuses = [
-            "NEW",
-            "PREPARING",
-            "READY",
-            "SERVED",
-        ];
+            const {
+                status,
+            } = req.body || {};
 
-        // Validate status
-        if (
-            typeof status !== "string" ||
-            !allowedStatuses.includes(status)
-        ) {
-            res.status(400).json({
-                message: "Invalid order status",
-            });
-            return;
-        }
+            // ========================================
+            // ALLOWED STATUS
+            // ========================================
 
-        // Find order
-        const order = await Order.findById(
-            orderId
-        );
+            const allowedStatuses = [
+                "NEW",
+                "PREPARING",
+                "READY",
+                "SERVED",
+            ];
 
-        if (!order) {
-            res.status(404).json({
-                message: "Order not found",
-            });
-            return;
-        }
+            if (
+                typeof status !==
+                    "string" ||
+                !allowedStatuses.includes(
+                    status
+                )
+            ) {
+                res.status(400).json({
+                    message:
+                        "Invalid order status",
+                });
 
-        // Paid order is final
-        if (order.status === "PAID") {
-            res.status(400).json({
+                return;
+            }
+
+            // ========================================
+            // FIND ORDER
+            // ========================================
+
+            const order =
+                await Order.findById(
+                    orderId
+                );
+
+            if (!order) {
+                res.status(404).json({
+                    message:
+                        "Order not found",
+                });
+
+                return;
+            }
+
+            // ========================================
+            // PAID CANNOT CHANGE
+            // ========================================
+
+            if (
+                order.status ===
+                "PAID"
+            ) {
+                res.status(400).json({
+                    message:
+                        "Paid order cannot be changed",
+                });
+
+                return;
+            }
+
+            // ========================================
+            // STATUS FLOW
+            // ========================================
+
+            const nextStatus:
+                Record<
+                    string,
+                    string
+                > = {
+                    NEW: "PREPARING",
+
+                    PREPARING:
+                        "READY",
+
+                    READY:
+                        "SERVED",
+                };
+
+            if (
+                nextStatus[
+                    order.status
+                ] !== status
+            ) {
+                res.status(400).json({
+                    message:
+                        `Cannot move order from ${order.status} to ${status}`,
+                });
+
+                return;
+            }
+
+            // ========================================
+            // UPDATE STATUS
+            // ========================================
+
+            order.status =
+                status as
+                    | "NEW"
+                    | "PREPARING"
+                    | "READY"
+                    | "SERVED"
+                    | "PAID";
+
+            // ========================================
+            // IMPORTANT:
+            //
+            // When kitchen starts processing NEW,
+            // pendingItems remain.
+            //
+            // When waiter SERVES the order,
+            // pendingItems can be cleared.
+            //
+            // Because those items have now been
+            // served and already exist in `items`.
+            // ========================================
+
+            if (
+                status ===
+                "SERVED"
+            ) {
+                order.pendingItems =
+                    [];
+            }
+
+            await order.save();
+
+            // ========================================
+            // RESPONSE
+            // ========================================
+
+            res.status(200).json({
                 message:
-                    "Paid order cannot be changed",
+                    "Order status updated successfully",
+
+                order,
             });
-            return;
-        }
+        } catch (error) {
+            console.error(
+                "Update order status error:",
+                error
+            );
 
-        // Define correct order flow
-        const nextStatus: Record<
-            string,
-            string
-        > = {
-            NEW: "PREPARING",
-            PREPARING: "READY",
-            READY: "SERVED",
-        };
-
-        // Prevent skipping stages
-        if (
-            nextStatus[order.status] !== status
-        ) {
-            res.status(400).json({
+            res.status(500).json({
                 message:
-                    `Cannot move order from ${order.status} to ${status}`,
+                    "Failed to update order status",
+
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : error,
             });
-            return;
         }
-
-        // Update status
-        order.status = status as
-            | "NEW"
-            | "PREPARING"
-            | "READY"
-            | "SERVED"
-            | "PAID";
-
-        await order.save();
-
-        res.status(200).json({
-            message:
-                "Order status updated successfully",
-            order,
-        });
-    } catch (error) {
-        console.error(
-            "Update order status error:",
-            error
-        );
-
-        res.status(500).json({
-            message:
-                "Failed to update order status",
-            error:
-                error instanceof Error
-                    ? error.message
-                    : error,
-        });
-    }
-};
+    };
